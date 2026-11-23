@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ChronoSync クロノシンク | 日本史×世界史 同時代タイムライン</title>
+<meta name="description" content="日本史と世界史を同じ年表に並べて、同時代のつながりと因果関係を俯瞰する学習アプリ（1500〜1900年）">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ChronoSync クロノシンク | 日本史×世界史 同時代タイムライン">
+<meta property="og:description" content="日本史と世界史を同じ年表に並べて、同時代のつながりと因果関係を俯瞰する学習アプリ（1500〜1900年）">
+<meta property="og:url" content="https://jkj7vv2nd7-lang.github.io/chronosync/">
+<meta property="og:image" content="https://jkj7vv2nd7-lang.github.io/chronosync/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#14213d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ChronoSync">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='36' fill='%2314213d'/><circle cx='98' cy='90' r='50' fill='none' stroke='%23e9b949' stroke-width='9'/><line x1='98' y1='90' x2='98' y2='58' stroke='%23e9b949' stroke-width='9' stroke-linecap='round'/><line x1='98' y1='90' x2='122' y2='103' stroke='%23e9b949' stroke-width='9' stroke-linecap='round'/><circle cx='98' cy='90' r='8' fill='%23e9b949'/><circle cx='30' cy='52' r='10' fill='%23e74c3c'/><circle cx='30' cy='90' r='10' fill='%2327ae60'/><circle cx='30' cy='128' r='10' fill='%233498db'/></svg>">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href='data:application/manifest+json,{"name":"ChronoSync クロノシンク","short_name":"ChronoSync","display":"standalone","background_color":"%2314213d","theme_color":"%2314213d","start_url":"."}'>
+<style>
+  :root{
+    --navy:#14213d;
+    --navy2:#1f3461;
+    --gold:#e9b949;
+    --ink:#1c2430;
+    --paper:#f7f3ea;
+    --jp:#b03a2e;  --jp-bg:#fdeeec;  --jp-dark:#8e2f24;
+    --ea:#1e8449;  --ea-bg:#e9f7ef;  --ea-dark:#176638;
+    --wd:#2471a3;  --wd-bg:#ebf3fa;  --wd-dark:#1b5579;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; height:100%;}
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+    color:var(--ink); background:var(--paper); font-size:16px; line-height:1.5;
+  }
+  button{font-family:inherit; cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ============ タイトル画面 ============ */
+  #screen-title{
+    min-height:100dvh; display:flex; flex-direction:column; align-items:center;
+    padding:40px 22px 28px; text-align:center; color:#fff;
+    background:linear-gradient(160deg, #0d1730 0%, var(--navy) 45%, var(--navy2) 100%);
+  }
+  .logo-ring{margin-top:10px;}
+  .app-name{font-size:40px; font-weight:800; letter-spacing:.04em; margin:18px 0 0;}
+  .app-name .sync{color:var(--gold);}
+  .app-sub{font-size:19px; letter-spacing:.35em; margin:4px 0 0; color:#dfe6f2;}
+  .tagline{font-size:21px; font-weight:700; margin:26px 0 0; line-height:1.6;}
+  .tagline em{font-style:normal; color:var(--gold);}
+  .desc{font-size:16px; line-height:1.9; color:#c9d4e8; max-width:520px; margin:16px 0 0;}
+  .lane-chips{display:flex; gap:10px; margin:26px 0 0; flex-wrap:wrap; justify-content:center;}
+  .lane-chips span{
+    display:inline-flex; align-items:center; gap:8px; font-size:16px; font-weight:700;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.25);
+    padding:9px 16px; border-radius:999px;
+  }
+  .lane-chips i{width:14px; height:14px; border-radius:50%; display:inline-block;}
+  .lane-chips .dot-jp{background:#e74c3c;} .lane-chips .dot-ea{background:#2ecc71;} .lane-chips .dot-wd{background:#3498db;}
+  .era-note{margin:18px 0 0; font-size:15px; color:#9fb0cc;}
+  #btn-open{
+    margin-top:34px; min-height:60px; padding:14px 44px; font-size:20px; font-weight:800;
+    color:#231a04; background:linear-gradient(180deg,#f4cd68,#e9b949); border:none; border-radius:999px;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  #btn-open:active{transform:translateY(1px);}
+  .title-footer{margin-top:auto; padding-top:36px; font-size:13px; color:#8496b5;}
+
+  /* ============ 本体画面 ============ */
+  #screen-main{display:flex; flex-direction:column; height:100dvh;}
+  .app-header{
+    background:var(--navy); color:#fff; padding:10px 12px;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding-top:calc(10px + env(safe-area-inset-top));
+  }
+  .app-header .ttl{font-size:18px; font-weight:800; letter-spacing:.03em; white-space:nowrap;}
+  .app-header .ttl .sync{color:var(--gold);}
+  .zoom-switch{margin-left:auto; display:flex; background:rgba(255,255,255,.12); border-radius:999px; padding:3px;}
+  .zoom-switch button{
+    min-height:44px; min-width:76px; padding:8px 18px; font-size:16px; font-weight:700;
+    border:none; border-radius:999px; background:transparent; color:#c9d4e8;
+  }
+  .zoom-switch button[aria-pressed="true"]{background:var(--gold); color:#231a04;}
+  .btn-back{
+    min-height:44px; padding:8px 14px; font-size:15px; font-weight:700;
+    background:transparent; color:#dfe6f2; border:1px solid rgba(255,255,255,.4); border-radius:999px;
+  }
+
+  .tl-scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; background:
+    linear-gradient(180deg,#fbf8f1, var(--paper));}
+  .lane-head{
+    position:sticky; top:0; z-index:6; display:grid; grid-template-columns:48px 1fr 1fr 1fr;
+    background:#fffdf7; border-bottom:2px solid #d8d2c2; box-shadow:0 2px 6px rgba(20,33,61,.08);
+  }
+  .lane-head .lh{
+    text-align:center; font-weight:800; font-size:16px; padding:10px 2px; min-height:44px;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .lane-head .lh i{width:11px; height:11px; border-radius:50%; display:inline-block; flex:none;}
+  .lh.jp{color:var(--jp-dark);} .lh.jp i{background:var(--jp);}
+  .lh.ea{color:var(--ea-dark);} .lh.ea i{background:var(--ea);}
+  .lh.wd{color:var(--wd-dark);} .lh.wd i{background:var(--wd);}
+  .lh small{display:block; font-size:11px; font-weight:600; color:#8a8574;}
+
+  .tl-body{position:relative; display:grid; grid-template-columns:48px 1fr 1fr 1fr;}
+  .gridlines{position:absolute; inset:0; grid-column:1 / -1; pointer-events:none; z-index:0;}
+  .gridlines .gl{position:absolute; left:0; right:0; border-top:1px solid #e3ddcb;}
+  .gridlines .gl.major{border-top:2px solid #cfc7ab;}
+  .gridlines .gl.minor{border-top:1px dashed #ece7d7;}
+  .axis{position:relative; z-index:1;}
+  .axis .tick{
+    position:absolute; right:6px; transform:translateY(-50%);
+    font-size:12.5px; font-weight:700; color:#7a7462; white-space:nowrap;
+  }
+  .axis .tick.major{color:#57523f; font-size:13.5px;}
+  .lane{position:relative; z-index:1; border-left:1px solid #e7e1cf;}
+  .lane.jp{background:rgba(176,58,46,.045);}
+  .lane.ea{background:rgba(30,132,73,.045);}
+  .lane.wd{background:rgba(36,113,163,.045);}
+
+  .card{
+    position:absolute; left:5px; right:5px; text-align:left;
+    border-radius:10px; padding:7px 9px 8px; min-height:48px;
+    border:2px solid transparent; background:#fff;
+    box-shadow:0 1px 4px rgba(20,33,61,.13);
+    display:flex; flex-direction:column; gap:1px;
+  }
+  .card .cy{font-size:13px; font-weight:800; letter-spacing:.02em;}
+  .card .ct{
+    font-size:14.5px; font-weight:700; line-height:1.35; color:var(--ink);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .card.jp{border-left:6px solid var(--jp); background:var(--jp-bg);} .card.jp .cy{color:var(--jp-dark);}
+  .card.ea{border-left:6px solid var(--ea); background:var(--ea-bg);} .card.ea .cy{color:var(--ea-dark);}
+  .card.wd{border-left:6px solid var(--wd); background:var(--wd-bg);} .card.wd .cy{color:var(--wd-dark);}
+  .card.selected{
+    border-color:var(--navy); box-shadow:0 0 0 3px var(--gold), 0 6px 16px rgba(20,33,61,.3); z-index:3;
+  }
+  .card.linked{
+    border-color:#b8860b; z-index:2;
+    animation:pulse 1.1s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{box-shadow:0 0 0 2px rgba(233,185,73,.55), 0 2px 6px rgba(20,33,61,.2);}
+    50%{box-shadow:0 0 0 6px rgba(233,185,73,.95), 0 2px 6px rgba(20,33,61,.2);}
+  }
+  .card-top{display:flex; align-items:center; justify-content:space-between; gap:6px;}
+  .card-meta{display:inline-flex; align-items:center; gap:6px; flex:none;}
+  .link-mark{display:inline-flex; align-items:center; color:#b8860b;}
+  .link-mark svg{display:block;}
+  .dots{display:inline-flex; align-items:center; gap:3px;}
+  .dots i{width:7px; height:7px; border-radius:50%; background:#d8d2c2; display:inline-block;}
+  .dots i.on{background:#b8860b;}
+
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:center;
+    margin:0 auto 14px; max-width:560px; font-size:14px; font-weight:700; color:#57523f;
+  }
+  .legend .li{display:inline-flex; align-items:center; gap:7px;}
+  .legend .swatch{width:16px; height:16px; border-radius:5px; background:#fff; border:2px solid #b8860b; display:inline-block;}
+  #btn-guide{
+    margin-top:12px; margin-right:10px; min-height:48px; padding:10px 26px; font-size:16px; font-weight:700;
+    background:#fff; color:var(--navy); border:2px solid var(--navy); border-radius:999px;
+  }
+
+  /* ============ 使い方ガイド ============ */
+  .guide{
+    position:fixed; inset:0; z-index:40; display:flex; align-items:center; justify-content:center;
+    background:rgba(13,23,48,.62); padding:20px;
+  }
+  .guide-box{
+    background:#fff; border-radius:18px; max-width:520px; width:100%;
+    padding:24px 22px 22px; box-shadow:0 12px 40px rgba(0,0,0,.4);
+    max-height:86dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .guide-title{font-size:21px; font-weight:800; margin:0; color:var(--navy);}
+  .guide-steps{list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:14px;}
+  .guide-steps li{display:flex; gap:12px; align-items:flex-start; font-size:16.5px; line-height:1.65;}
+  .guide-steps .num{
+    flex:none; width:30px; height:30px; border-radius:50%; margin-top:2px;
+    background:var(--gold); color:#231a04; font-weight:800; font-size:16px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #btn-guide-close{
+    margin-top:22px; width:100%; min-height:56px; padding:12px; font-size:18px; font-weight:800;
+    color:#231a04; background:linear-gradient(180deg,#f4cd68,#e9b949); border:none; border-radius:999px;
+  }
+
+  .app-footer{
+    padding:26px 18px 44px; text-align:center; color:#7a7462; font-size:14px;
+    border-top:1px solid #e3ddcb; margin-top:10px;
+  }
+  .app-footer .ver{font-weight:700; color:#57523f;}
+  #btn-update{
+    margin-top:12px; min-height:48px; padding:10px 26px; font-size:16px; font-weight:700;
+    background:#fff; color:var(--navy); border:2px solid var(--navy); border-radius:999px;
+  }
+
+  /* ============ 詳細パネル ============ */
+  .panel{
+    position:fixed; left:0; right:0; bottom:0; z-index:20;
+    background:#fff; border-radius:18px 18px 0 0;
+    box-shadow:0 -6px 28px rgba(20,33,61,.35);
+    transform:translateY(106%); transition:transform .3s ease;
+    max-height:66dvh; display:flex; flex-direction:column;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .panel.open{transform:translateY(0);}
+  .panel-head{
+    display:flex; align-items:flex-start; gap:10px; padding:14px 16px 8px;
+  }
+  .panel-head .ph-main{flex:1; min-width:0;}
+  .badge{
+    display:inline-block; font-size:13px; font-weight:800; color:#fff;
+    padding:3px 12px; border-radius:999px; vertical-align:middle;
+  }
+  .badge.jp{background:var(--jp);} .badge.ea{background:var(--ea);} .badge.wd{background:var(--wd);}
+  .panel-year{font-size:15px; font-weight:800; color:#57523f; margin-left:8px;}
+  .panel-title{font-size:20px; font-weight:800; line-height:1.4; margin:6px 0 0;}
+  .panel-close{
+    flex:none; width:48px; height:48px; border-radius:50%; border:none;
+    background:#f0ebdd; color:var(--ink); font-size:24px; line-height:1;
+  }
+  .panel-body{overflow-y:auto; padding:2px 16px 20px; -webkit-overflow-scrolling:touch;}
+  .panel-summary{font-size:16.5px; line-height:1.75; margin:6px 0 0;}
+  .panel-sec{font-size:14px; font-weight:800; color:#57523f; letter-spacing:.08em; margin:18px 0 8px;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-size:14.5px; font-weight:700; background:#f4efe0; color:#4d4630;
+    border:1px solid #ddd3ae; padding:5px 12px; border-radius:999px;
+  }
+  .reason{
+    font-size:16px; line-height:1.8; background:#fdf6e0; border:1px solid #ecd98f;
+    border-radius:10px; padding:10px 14px; margin:0;
+  }
+  .link-list{display:flex; flex-direction:column; gap:10px;}
+  .link-btn{
+    display:flex; align-items:center; gap:10px; text-align:left; width:100%;
+    min-height:56px; padding:10px 12px; border-radius:10px; background:#fff;
+    border:2px solid #d8d2c2; font-size:15.5px;
+  }
+  .link-btn .bar{flex:none; width:6px; align-self:stretch; border-radius:3px;}
+  .link-btn.jp .bar{background:var(--jp);} .link-btn.ea .bar{background:var(--ea);} .link-btn.wd .bar{background:var(--wd);}
+  .link-btn .ly{font-weight:800; white-space:nowrap;}
+  .link-btn.jp .ly{color:var(--jp-dark);} .link-btn.ea .ly{color:var(--ea-dark);} .link-btn.wd .ly{color:var(--wd-dark);}
+  .link-btn .lt{font-weight:700; line-height:1.4;}
+  .link-btn .go{margin-left:auto; flex:none; color:#8a8574; font-weight:800;}
+  .diff{font-size:13.5px; color:#8a8574; font-weight:700;}
+
+  /* ============ タイトル画面のサブボタン ============ */
+  .title-sub-btns{display:flex; flex-direction:column; gap:12px; margin-top:14px;}
+  #btn-to-game, #btn-to-review{
+    min-height:56px; min-width:280px; padding:12px 22px; font-size:17px; font-weight:800;
+    border-radius:999px; background:rgba(255,255,255,.1); color:#fff;
+    border:2px solid rgba(255,255,255,.55);
+  }
+  #btn-to-game:active, #btn-to-review:active{transform:translateY(1px);}
+
+  /* ============ ゲーム画面 ============ */
+  #screen-game{display:flex; flex-direction:column; height:100dvh;}
+  .game-scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 16px 48px;}
+  .game-box{max-width:560px; margin:0 auto;}
+  .game-h{font-size:24px; font-weight:800; color:var(--navy); margin:6px 0 0;}
+  .game-desc{font-size:16.5px; line-height:1.8; margin:12px 0 0;}
+  .game-note{font-size:14px; color:#7a7462; line-height:1.7; margin:14px 0 0;}
+  .level-switch{display:flex; gap:8px; margin-top:8px;}
+  .level-switch button{
+    flex:1; min-height:56px; padding:8px 4px; font-size:16px; font-weight:800;
+    background:#fff; border:2px solid #d8d2c2; border-radius:12px; color:var(--ink);
+  }
+  .level-switch button small{font-size:13px; font-weight:700; color:#7a7462;}
+  .level-switch button[aria-pressed="true"]{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .level-switch button[aria-pressed="true"] small{color:#c9d4e8;}
+  .big-btn{
+    margin-top:22px; width:100%; min-height:58px; padding:12px; font-size:19px; font-weight:800;
+    color:#231a04; background:linear-gradient(180deg,#f4cd68,#e9b949); border:none; border-radius:999px;
+    box-shadow:0 4px 12px rgba(20,33,61,.25);
+  }
+  .big-btn:disabled{opacity:.45; box-shadow:none;}
+  .sub-btn{
+    margin-top:12px; width:100%; min-height:52px; padding:10px; font-size:16px; font-weight:700;
+    background:#fff; color:var(--navy); border:2px solid var(--navy); border-radius:999px;
+  }
+  #game-play .big-btn{display:block; max-width:560px; margin-left:auto; margin-right:auto;}
+  .game-status{
+    display:flex; gap:8px; flex-wrap:wrap; font-weight:800; font-size:15.5px;
+    color:var(--navy); max-width:560px; margin:0 auto;
+  }
+  .game-status span{background:#fff; border:1px solid #ddd3ae; border-radius:999px; padding:6px 14px;}
+  .game-status .combo-hot{background:#fdf6e0; border-color:var(--gold); color:#8a6410;}
+  .base-card{
+    max-width:560px; margin:14px auto 0; background:var(--navy); color:#fff;
+    border-radius:14px; padding:16px; box-shadow:0 6px 18px rgba(20,33,61,.3);
+  }
+  .base-card .byear{font-size:27px; font-weight:800; color:var(--gold); margin-left:10px; vertical-align:middle;}
+  .base-card .bt{font-size:21px; font-weight:800; line-height:1.45; margin-top:8px;}
+  .game-q{max-width:560px; margin:16px auto 0; font-size:16.5px; font-weight:700; line-height:1.7;}
+  .hand-list{max-width:560px; margin:12px auto 0; display:flex; flex-direction:column; gap:10px;}
+  .hand-card{
+    display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%;
+    min-height:56px; padding:10px 12px; border-radius:12px; background:#fff;
+    border:2px solid #d8d2c2; font-size:16px;
+  }
+  .hand-card .bar{flex:none; width:6px; align-self:stretch; border-radius:3px;}
+  .hand-card.jp .bar{background:var(--jp);} .hand-card.ea .bar{background:var(--ea);} .hand-card.wd .bar{background:var(--wd);}
+  .hand-main{flex:1; min-width:0; display:flex; flex-direction:column;}
+  .hand-card .ht{font-weight:700; line-height:1.45;}
+  .hand-card .hr{font-size:13.5px; font-weight:700; color:#8a8574; margin-top:2px;}
+  .hand-card .hy{font-weight:800; color:var(--navy);}
+  .hand-card .reason-line{font-size:14px; line-height:1.65; margin-top:5px; color:#4d4630;}
+  .hand-card.picked{border-color:var(--navy); box-shadow:0 0 0 3px var(--gold);}
+  .hand-card.ok{border-color:#1e8449; background:#e9f7ef;}
+  .hand-card.missed{border-color:#b8860b; background:#fdf6e0;}
+  .hand-card.ng{border-color:#b03a2e; background:#fdeeec;}
+  .mark{
+    flex:none; font-weight:800; font-size:13.5px; padding:3px 10px;
+    border-radius:999px; color:#fff; margin-top:2px; white-space:nowrap;
+  }
+  .mark.ok{background:#1e8449;} .mark.missed{background:#b8860b;} .mark.ng{background:#b03a2e;}
+  .round-banner{
+    max-width:560px; margin:16px auto 0; font-size:18px; font-weight:800; text-align:center;
+    background:#fdf6e0; border:1px solid #ecd98f; border-radius:12px; padding:12px; line-height:1.6;
+  }
+  .result-grid{display:flex; gap:10px; margin-top:18px;}
+  .result-grid > div{
+    flex:1; background:#fff; border:1px solid #ddd3ae; border-radius:12px;
+    padding:14px 6px; text-align:center; display:flex; flex-direction:column; gap:2px;
+  }
+  .result-num{font-size:26px; font-weight:800; color:var(--navy);}
+  .result-label{font-size:13px; font-weight:700; color:#7a7462;}
+</style>
+</head>
+<body>
+
+<!-- ================= タイトル画面 ================= -->
+<section id="screen-title">
+  <svg class="logo-ring" width="118" height="118" viewBox="0 0 180 180" aria-hidden="true">
+    <circle cx="98" cy="90" r="52" fill="none" stroke="#e9b949" stroke-width="7"/>
+    <g stroke="#e9b949" stroke-width="4">
+      <line x1="98" y1="42" x2="98" y2="52"/><line x1="98" y1="128" x2="98" y2="138"/>
+      <line x1="50" y1="90" x2="60" y2="90"/><line x1="136" y1="90" x2="146" y2="90"/>
+    </g>
+    <line x1="98" y1="90" x2="98" y2="58" stroke="#e9b949" stroke-width="8" stroke-linecap="round"/>
+    <line x1="98" y1="90" x2="122" y2="103" stroke="#e9b949" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="98" cy="90" r="8" fill="#e9b949"/>
+    <line x1="30" y1="34" x2="30" y2="146" stroke="rgba(255,255,255,.35)" stroke-width="3"/>
+    <circle cx="30" cy="52" r="10" fill="#e74c3c"/>
+    <circle cx="30" cy="90" r="10" fill="#2ecc71"/>
+    <circle cx="30" cy="128" r="10" fill="#3498db"/>
+  </svg>
+  <h1 class="app-name">Chrono<span class="sync">Sync</span></h1>
+  <p class="app-sub">クロノシンク</p>
+  <p class="tagline">日本史 × 世界史を、<em>同時代</em>で見る。</p>
+  <p class="desc">日本史・東アジア史・世界史を1つの年表に横並びで俯瞰し、ちがう地域の出来事の「つながり」を発見するアプリです。たとえば鉄砲が伝来した年、世界では何が起きていたのでしょう。出来事をタップすると、なぜつながっているのかが分かります。</p>
+  <div class="lane-chips">
+    <span><i class="dot-jp"></i>日本</span>
+    <span><i class="dot-ea"></i>東アジア</span>
+    <span><i class="dot-wd"></i>世界</span>
+  </div>
+  <p class="era-note">対象：1500年〜1900年（戦国・江戸・幕末・明治 × 大航海時代・産業革命）</p>
+  <button id="btn-open" type="button">タイムラインを開く</button>
+  <div class="title-sub-btns">
+    <button id="btn-to-game" type="button">コンボゲームで遊ぶ</button>
+    <button id="btn-to-review" type="button">弱点復習（今日 0 件）</button>
+  </div>
+  <div class="title-footer">ChronoSync ver <span class="js-ver"></span> ／ フェーズ2：コンボゲーム＆弱点復習</div>
+</section>
+
+<!-- ================= 本体画面 ================= -->
+<section id="screen-main" class="hidden">
+  <header class="app-header">
+    <button class="btn-back" id="btn-back" type="button">← 表紙へ</button>
+    <div class="ttl">Chrono<span class="sync">Sync</span></div>
+    <button class="btn-back" id="btn-main-game" type="button">ゲーム</button>
+    <button class="btn-back" id="btn-main-review" type="button">復習（0）</button>
+    <div class="zoom-switch" role="group" aria-label="表示の拡大・縮小">
+      <button id="zoom-overview" type="button" aria-pressed="true">俯瞰</button>
+      <button id="zoom-detail" type="button" aria-pressed="false">詳細</button>
+    </div>
+  </header>
+
+  <div class="tl-scroll" id="tlScroll">
+    <div class="lane-head" aria-hidden="true">
+      <div></div>
+      <div class="lh jp"><i></i><span>日本<small>Japan</small></span></div>
+      <div class="lh ea"><i></i><span>東アジア<small>East Asia</small></span></div>
+      <div class="lh wd"><i></i><span>世界<small>World</small></span></div>
+    </div>
+    <div class="tl-body" id="tlBody">
+      <div class="gridlines" id="gridlines"></div>
+      <div class="axis" id="axis"></div>
+      <div class="lane jp" id="lane-japan"></div>
+      <div class="lane ea" id="lane-east_asia"></div>
+      <div class="lane wd" id="lane-world"></div>
+    </div>
+    <footer class="app-footer">
+      <div class="legend" aria-label="凡例">
+        <span class="li"><span class="link-mark" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>つながりあり</span>
+        <span class="li"><span class="dots" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span>難易度（金色の点の数）</span>
+        <span class="li"><span class="swatch" aria-hidden="true"></span>金色に光るカード＝つながる出来事</span>
+      </div>
+      <div>ChronoSync クロノシンク　<span class="ver">ver <span class="js-ver"></span></span></div>
+      <div style="margin-top:6px;">収録データ：1500〜1900年・全30件（日本12／東アジア8／世界10）</div>
+      <div style="margin-top:4px;">表示が古いと感じたら、下のボタンで最新の版に更新できます。</div>
+      <button id="btn-guide" type="button">使い方を見る</button><button id="btn-update" type="button">最新の版に更新する</button>
+    </footer>
+  </div>
+</section>
+
+<!-- ================= ゲーム画面 ================= -->
+<section id="screen-game" class="hidden">
+  <header class="app-header">
+    <button class="btn-back" id="btn-game-quit" type="button">← 表紙へ</button>
+    <div class="ttl" id="game-title">コンボゲーム</div>
+    <button class="btn-back" id="btn-mute" type="button" aria-pressed="false" style="margin-left:auto;">音：オン</button>
+  </header>
+  <div class="game-scroll">
+    <!-- スタート -->
+    <div id="game-start" class="game-box">
+      <h2 class="game-h" id="game-start-title">同時代コンボゲーム</h2>
+      <p class="game-desc" id="game-start-desc">基準の出来事と「同時代」または「つながり」のある出来事を、すべて選んでください。因果リンクのある出来事は、年代が離れていても正解です。手札の年代は判定後に分かります。</p>
+      <p class="game-desc" id="review-info"></p>
+      <div class="panel-sec">むずかしさ（年代の幅）</div>
+      <div class="level-switch" role="group" aria-label="むずかしさ">
+        <button type="button" data-level="easy" aria-pressed="false">初級<br><small>前後50年</small></button>
+        <button type="button" data-level="normal" aria-pressed="true">標準<br><small>前後30年</small></button>
+        <button type="button" data-level="hard" aria-pressed="false">上級<br><small>前後20年</small></button>
+      </div>
+      <button id="btn-game-start" class="big-btn" type="button">ゲームスタート</button>
+      <p class="game-note" id="game-start-note">1セット10問。ミスした問題は「弱点復習」に自動で登録され、翌日以降に出題されます。</p>
+    </div>
+    <!-- プレイ -->
+    <div id="game-play" class="hidden">
+      <div class="game-status">
+        <span id="gs-progress">第1問 / 10</span>
+        <span id="gs-score">スコア 0</span>
+        <span id="gs-combo">コンボ 0</span>
+      </div>
+      <div class="base-card" id="base-card"></div>
+      <p class="game-q">この出来事と「同時代」または「つながり」のある出来事を、すべて選んでください。</p>
+      <div class="hand-list" id="hand-list"></div>
+      <div class="round-banner hidden" id="round-banner"></div>
+      <button id="btn-decide" class="big-btn" type="button">決定</button>
+      <button id="btn-next-q" class="big-btn hidden" type="button">次の問題へ</button>
+    </div>
+    <!-- 結果 -->
+    <div id="game-result" class="game-box hidden">
+      <h2 class="game-h">結果</h2>
+      <div class="result-grid">
+        <div><span class="result-num" id="rs-score">0</span><span class="result-label">スコア</span></div>
+        <div><span class="result-num" id="rs-perfect">0/10</span><span class="result-label">全問正解</span></div>
+        <div><span class="result-num" id="rs-combo">0</span><span class="result-label">最大コンボ</span></div>
+      </div>
+      <p class="game-desc" id="rs-note"></p>
+      <button id="btn-again" class="big-btn" type="button">もう一度あそぶ</button>
+      <button id="btn-to-timeline" class="sub-btn" type="button">タイムラインへ</button>
+      <button id="btn-to-title" class="sub-btn" type="button">表紙へ</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 詳細パネル ================= -->
+<div class="panel" id="panel" role="dialog" aria-modal="false" aria-hidden="true" aria-label="出来事の詳細">
+  <div class="panel-head">
+    <div class="ph-main">
+      <span class="badge" id="panelBadge">日本</span><span class="panel-year" id="panelYear"></span>
+      <h2 class="panel-title" id="panelTitle"></h2>
+    </div>
+    <button class="panel-close" id="panelClose" type="button" aria-label="詳細を閉じる">×</button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+</div>
+
+<!-- ================= 使い方ガイド（初回のみ自動表示） ================= -->
+<div class="guide hidden" id="guide" role="dialog" aria-modal="true" aria-label="使い方ガイド">
+  <div class="guide-box">
+    <h2 class="guide-title">使い方</h2>
+    <ol class="guide-steps">
+      <li><span class="num">1</span><span>縦にスクロールすると、同時代の出来事が横に並んで見えます。</span></li>
+      <li><span class="num">2</span><span>カードを押すと、その出来事の詳しい説明が見られます。</span></li>
+      <li><span class="num">3</span><span>金色に光るカードは、選んだ出来事と「つながる出来事」です。カードの鎖の印は「つながりあり」、金色の点は難易度を表します。</span></li>
+      <li><span class="num">4</span><span>上の「俯瞰／詳細」ボタンで、年表の拡大・縮小ができます。</span></li>
+    </ol>
+    <button id="btn-guide-close" type="button">閉じる</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+const APP_VERSION = "1.0.0";
+const EVENTS = [{"difficulty":1,"id":"ev_1517_luther","is_premium":false,"link_reason":"宗教改革への対抗として海外布教を目指すイエズス会が設立され、ザビエルの日本来日へ繋がった。","linked_event_ids":["ev_1549_xavier"],"region":"world","summary_1line":"免罪符販売を批判したことでカトリックからプロテスタントが分離し、対抗してイエズス会が誕生する背景となった。","textbook_keywords":["マルティン・ルター","九十五カ条の論題","宗教改革","イエズス会"],"title":"宗教改革の始まり（ルター『九十五カ条の論題』）","year":1517},{"difficulty":2,"id":"ev_1533_iwami","is_premium":false,"link_reason":"銀本位制へ移行した明（中国）の旺盛な銀需要を日本の銀が満たし、南蛮貿易・東アジア交易が活性化した。","linked_event_ids":["ev_1571_ichijo_ming","ev_1571_nagasaki"],"region":"japan","summary_1line":"朝鮮半島から伝わった精錬技術「灰吹法」により日本の銀産出量が激増し、東アジア貿易の主役となった。","textbook_keywords":["石見銀山","灰吹法","神屋寿禎"],"title":"石見銀山への灰吹法導入","year":1533},{"difficulty":1,"id":"ev_1543_teppo","is_premium":false,"link_reason":"大航海時代によりアジアへ進出したポルトガル人が、日本の戦国期と直接接触した最初の象徴的出来事。","linked_event_ids":["ev_1545_potosi","ev_1549_xavier"],"region":"japan","summary_1line":"漂着したポルトガル人から種子島時尭に火縄銃が伝わり、戦国時代の戦術と城郭構造を一変させた。","textbook_keywords":["種子島時尭","鉄砲伝来","ポルトガル","火縄銃"],"title":"鉄砲伝来（種子島）","year":1543},{"difficulty":2,"id":"ev_1545_potosi","is_premium":false,"link_reason":"メキシコ・南米の銀が太平洋（ガレオン貿易）や欧州経由で明へ流れ、日本銀と並ぶ世界の二大銀供給源となった。","linked_event_ids":["ev_1571_ichijo_ming","ev_1543_teppo"],"region":"world","summary_1line":"南米ボリビアでスペインが巨大銀山を発見し、大量のアメリカ銀が欧州やアジアへ流れ込んだ。","textbook_keywords":["ポトシ銀山","スペイン","価格革命","銀の流通"],"title":"ポトシ銀山の発見","year":1545},{"difficulty":1,"id":"ev_1549_xavier","is_premium":false,"link_reason":"欧州の宗教改革に対抗するカトリックの海外布教戦略が、日本での宣教と南蛮貿易に直結した。","linked_event_ids":["ev_1517_luther","ev_1571_nagasaki"],"region":"japan","summary_1line":"イエズス会の宣教師ザビエルが鹿児島に上陸し、日本にキリスト教が本格的に伝えられた。","textbook_keywords":["フランシスコ・ザビエル","イエズス会","キリスト教伝来"],"title":"フランシスコ・ザビエル来日","year":1549},{"difficulty":2,"id":"ev_1571_nagasaki","is_premium":false,"link_reason":"明が海禁政策をとる中、ポルトガル商人が「中国（明）の生糸」と「日本の銀」を仲介して莫大な利益を得た。","linked_event_ids":["ev_1533_iwami","ev_1571_ichijo_ming"],"region":"japan","summary_1line":"大村純忠が長崎を開港し、ポルトガル船が生糸を運び日本の銀と交換する仲介貿易が栄えた。","textbook_keywords":["長崎開港","大村純忠","南蛮貿易","生糸と銀"],"title":"長崎開港・南蛮貿易の本格化","year":1571},{"difficulty":2,"id":"ev_1571_ichijo_ming","is_premium":false,"link_reason":"明の税制銀納化が、日本（石見銀山）と新大陸（ポトシ銀山）の銀を結びつける世界規模の商業網を生んだ。","linked_event_ids":["ev_1533_iwami","ev_1545_potosi","ev_1571_nagasaki"],"region":"east_asia","summary_1line":"張居正の改革により税を銀で納める一条鞭法が広がり、中国が世界の銀を吸い上げる中心地となった。","textbook_keywords":["一条鞭法","張居正","明","銀本位制"],"title":"明で一条鞭法の全国展開","year":1571},{"difficulty":1,"id":"ev_1592_bunroku","is_premium":false,"link_reason":"この戦争での巨額の戦費負担が明の国力を大きく消耗させ、のちの女真（清）台頭の遠因となった。","linked_event_ids":["ev_1644_qing"],"region":"east_asia","summary_1line":"豊臣秀吉が明の征服を目指して朝鮮に出兵し、明軍も参戦して東アジア全体の大戦となった。","textbook_keywords":["文禄・慶長の役","豊臣秀吉","李舜臣","明の衰退"],"title":"文禄の役（秀吉の朝鮮出兵）","year":1592},{"difficulty":1,"id":"ev_1600_eic","is_premium":false,"link_reason":"インドにおける商業活動の拠点確立が、後に広大な植民地支配の始まりとなった。","linked_event_ids":["ev_1602_voc","ev_1757_plassey"],"region":"world","summary_1line":"関ヶ原の戦いと同じ年、イギリスがアジア貿易の独占権を与えた東インド会社を設立した。","textbook_keywords":["イギリス東インド会社","エリザベス1世","重商主義"],"title":"イギリス東インド会社の設立","year":1600},{"id":"ev_1600_sekigahara","year":1600,"region":"japan","title":"関ヶ原の戦い","summary_1line":"徳川家康が豊臣秀吉の死後の覇権を巡り、石田三成らの豊臣恩顧大名と戦い勝利を収め、天下統一の主導権を確立した戦い。","textbook_keywords":["徳川家康","石田三成","天下分け目の戦い","豊臣政権"],"linked_event_ids":["ev_1603_edo"],"link_reason":"関ヶ原の勝利が徳川家康による江戸幕府開府の決定的な契機となった。","difficulty":2,"is_premium":false},{"difficulty":1,"id":"ev_1602_voc","is_premium":false,"link_reason":"キリスト教布教を伴わない貿易姿勢が江戸幕府に評価され、鎖国下でも長崎・出島での取引を独占した。","linked_event_ids":["ev_1639_sakoku_completion","ev_1808_phaeton"],"region":"world","summary_1line":"世界初の株式会社形態をとり、香辛料貿易を独占してアジア各地に強大な交易網を築いた。","textbook_keywords":["オランダ東インド会社","VOC","株式会社","バタヴィア"],"title":"オランダ東インド会社（VOC）の設立","year":1602},{"id":"ev_1603_edo","year":1603,"region":"japan","title":"江戸幕府の開府","summary_1line":"徳川家康が征夷大将軍に任命され、江戸に幕府を開き、およそ260年にわたる徳川の統治体制が確立した。","textbook_keywords":["徳川家康","征夷大将軍","幕藩体制","鎖国体制"],"linked_event_ids":["ev_1600_sekigahara","ev_1639_sakoku_completion"],"link_reason":"関ヶ原の戦いの勝利によって徳川家康が権力を掌握し、幕府を開いた。その後の鎖国体制の確立は、幕府の統治安定に大きく寄与した。","difficulty":2,"is_premium":false},{"id":"ev_1609_hirado_dutch","year":1609,"region":"japan","title":"平戸にオランダ東インド会社商館開設","summary_1line":"オランダ東インド会社が日本の平戸に商館を開設し、イギリスなどと競争しながら東アジア貿易における主要な地位を確立した。","textbook_keywords":["オランダ東インド会社","平戸","南蛮貿易","朱印船貿易"],"linked_event_ids":["ev_1600_eic","ev_1639_sakoku_completion"],"link_reason":"先に進出していたイギリス東インド会社と共に、ヨーロッパ勢力として日本との貿易を競った。後の鎖国体制下で唯一貿易を許される国となった。","difficulty":2,"is_premium":false},{"id":"ev_1637_shimabara","year":1637,"region":"japan","title":"島原の乱","summary_1line":"肥前島原・肥後天草の領民らが、キリスト教徒を中心に重税や迫害に反発して起こした大規模な一揆。幕府はこれを鎮圧し、鎖国政策を強化した。","textbook_keywords":["島原・天草一揆","キリスト教禁制","鎖国令","天草四郎"],"linked_event_ids":["ev_1639_sakoku_completion"],"link_reason":"この乱を契機に、幕府はキリスト教への警戒心を一層強め、鎖国体制を完成させる要因となった。","difficulty":2,"is_premium":false},{"difficulty":1,"id":"ev_1639_sakoku_completion","is_premium":false,"link_reason":"江戸幕府の安定統治とキリスト教禁制を徹底するため、島原の乱を契機に完成された外交政策である。","linked_event_ids":["ev_1603_edo","ev_1637_shimabara"],"region":"japan","summary_1line":"島原の乱後、江戸幕府がポルトガル船の来航を禁じ、貿易相手をオランダと中国等に限定した。","textbook_keywords":["鎖国","ポルトガル船来航禁止","出島","島原の乱"],"title":"ポルトガル船来航禁止（鎖国の完成）","year":1639},{"difficulty":2,"id":"ev_1644_qing","is_premium":false,"link_reason":"江戸幕府は明の遺臣（鄭成功など）からの援軍要請（日本乞師）を断り、海禁・鎖国体制を維持した。","linked_event_ids":["ev_1592_bunroku","ev_1639_sakoku_completion"],"region":"east_asia","summary_1line":"李自成の乱で明が滅び、満洲族の清が北京に入城して中国全土を支配する新王朝となった。","textbook_keywords":["明清交代","李自成","清","北京入城"],"title":"明の滅亡と清の中国支配確立","year":1644},{"id":"ev_1661_kangxi","year":1661,"region":"east_asia","title":"清の康熙帝即位","summary_1line":"清朝第4代皇帝として康熙帝が即位。約60年間の在位中に台湾を平定し、モンゴルやロシアとの関係を確立するなど、清朝隆盛の基礎を築いた。","textbook_keywords":["康熙帝","清朝","台湾平定","ネルチンスク条約"],"linked_event_ids":["ev_1689_nerchinsk_treaty"],"link_reason":"康熙帝の時代に清は安定期を迎え、北方のロシアとの間にネルチンスク条約を締結し、国境を確定させた。","difficulty":2,"is_premium":false},{"id":"ev_1688_glorious_revolution","year":1688,"region":"world","title":"名誉革命","summary_1line":"イギリスで、国王ジェームズ2世の専制政治に対し議会が抵抗し、メアリ2世とウィリアム3世を共同統治者として迎えた、流血を伴わない革命。","textbook_keywords":["ジェームズ2世","権利の章典","立憲君主制","議会政治"],"linked_event_ids":[],"link_reason":"","difficulty":2,"is_premium":false},{"id":"ev_1689_nerchinsk_treaty","year":1689,"region":"east_asia","title":"ネルチンスク条約","summary_1line":"清とロシアの間で締結された、両国の国境を画定する条約。清はロシアとの間で初めて対等な条約を結び、黒竜江流域の紛争を解決した。","textbook_keywords":["康熙帝","ピョートル1世","清","ロシア","国境画定"],"linked_event_ids":["ev_1661_kangxi","ev_1712_peter_st_petersburg"],"link_reason":"康熙帝時代の清と、ピョートル1世時代のロシアとの間で締結され、両国の外交関係の基礎を築いた。","difficulty":2,"is_premium":false},{"id":"ev_1690_genroku_culture","year":1690,"region":"japan","title":"元禄文化の開花（概ね1688-1704年）","summary_1line":"江戸時代中期、経済発展を背景に上方（京都・大阪）を中心に発展した町人文化。浮世絵、歌舞伎、人形浄瑠璃、俳諧などが盛んになった。","textbook_keywords":["町人文化","上方","浮世絵","歌舞伎","近松門左衛門","松尾芭蕉","井原西鶴"],"linked_event_ids":[],"link_reason":"","difficulty":2,"is_premium":false},{"id":"ev_1712_peter_st_petersburg","year":1712,"region":"world","title":"ロシア、サンクトペテルブルクに遷都","summary_1line":"ピョートル1世がバルト海沿岸に建設した新都サンクトペテルブルクへモスクワから遷都。ロシアの西欧化と海洋進出の象徴となった。","textbook_keywords":["ピョートル1世","サンクトペテルブルク","西欧化","北方戦争"],"linked_event_ids":["ev_1689_nerchinsk_treaty"],"link_reason":"ネルチンスク条約を締結したピョートル1世が、積極的な西欧化政策の一環として建設・遷都した。","difficulty":2,"is_premium":false},{"id":"ev_1757_plassey","year":1757,"region":"world","title":"プラッシーの戦い","summary_1line":"インドのベンガル地方でイギリス東インド会社がフランス・ベンガル太守連合軍に勝利。これによりイギリスはインドにおける支配権を確立する決定的な一歩を踏み出した。","textbook_keywords":["イギリス東インド会社","フランス東インド会社","ベンガル","植民地支配"],"linked_event_ids":["ev_1600_eic","ev_1840_opium"],"link_reason":"イギリス東インド会社がインドにおける拠点と経済権を確立し、後の広大な植民地支配とアヘン貿易の基盤となった。","difficulty":2,"is_premium":false},{"difficulty":1,"id":"ev_1760_ind_rev","is_premium":false,"link_reason":"大量生産した綿製品の販売市場と原料を求め、欧米列強がアジアの開国（清・日本）を迫る原動力となった。","linked_event_ids":["ev_1840_opium","ev_1853_perry"],"region":"world","summary_1line":"綿織物工業と蒸気機関の改良により工場制機械工業が普及し、世界の工場としての圧倒的国力を生んだ。","textbook_keywords":["産業革命","ワット","蒸気機関","綿工業"],"title":"イギリス産業革命の本格化","year":1760},{"difficulty":1,"id":"ev_1776_us_ind","is_premium":false,"link_reason":"独立後のアメリカが西部開拓を経て太平洋へ進出し、1853年のペリー来航へと繋がっていく。","linked_event_ids":["ev_1789_fr_rev","ev_1853_perry"],"region":"world","summary_1line":"イギリス領13植民地が独立を宣言し、人民主権と基本的人権を掲げる近代共和国が誕生した。","textbook_keywords":["アメリカ独立宣言","ジェファソン","13植民地"],"title":"アメリカ独立宣言","year":1776},{"difficulty":1,"id":"ev_1789_fr_rev","is_premium":false,"link_reason":"フランス革命後のナポレオン戦争が欧州の植民地支配を揺るがし、極東の長崎（フェートン号事件）にまで波及した。","linked_event_ids":["ev_1776_us_ind","ev_1808_phaeton"],"region":"world","summary_1line":"バスティーユ襲撃から人権宣言へ進み、絶対王政を倒して近代市民社会とナショナリズムを広げた。","textbook_keywords":["フランス革命","フランス人権宣言","バスティーユ"],"title":"フランス革命の勃発","year":1789},{"difficulty":2,"id":"ev_1808_phaeton","is_premium":true,"link_reason":"ナポレオン戦争でフランスに併合されたオランダの商館をイギリスが狙った事件で、幕府の対外警戒心を一気に高めた。","linked_event_ids":["ev_1789_fr_rev","ev_1825_uchiharai"],"region":"japan","summary_1line":"イギリス軍艦がオランダ船を拿捕するため長崎港に侵入し、江戸幕府の海防体制に衝撃を与えた。","textbook_keywords":["フェートン号事件","長崎","ナポレオン戦争","海防"],"title":"フェートン号事件","year":1808},{"difficulty":1,"id":"ev_1825_uchiharai","is_premium":true,"link_reason":"フェートン号事件や捕鯨船の頻繁な接近を受けて出された強硬策だったが、アヘン戦争の報で撤回を余儀なくされる。","linked_event_ids":["ev_1808_phaeton","ev_1842_kyuuyo"],"region":"japan","summary_1line":"接近する外国船を理由を問わず砲撃して追い払う強硬策を江戸幕府が発令した。","textbook_keywords":["異国船打払令","無二念打払令","江戸幕府"],"title":"異国船打払令の発布","year":1825},{"difficulty":1,"id":"ev_1840_opium","is_premium":true,"link_reason":"産業革命で圧倒的軍事力を持ったイギリスが清を破り、その衝撃が日本の幕府を「打払令の緩和」へと動かした。","linked_event_ids":["ev_1760_ind_rev","ev_1842_nanjing","ev_1842_kyuuyo"],"region":"east_asia","summary_1line":"林則徐のアヘン没収を契機にイギリスが清へ軍事侵攻し、東アジアの国際秩序が激変した。","textbook_keywords":["アヘン戦争","林則徐","三角貿易","イギリス"],"title":"アヘン戦争の勃発","year":1840},{"difficulty":1,"id":"ev_1842_nanjing","is_premium":true,"link_reason":"清が不平等条約を飲まされた事例は、のちの日米修好通商条約における日本の警戒や不平等条約構造の原型となった。","linked_event_ids":["ev_1840_opium","ev_1851_taiping","ev_1858_anpo"],"region":"east_asia","summary_1line":"アヘン戦争に敗れた清が、香港割譲・5港開港・巨額賠償金を認めた中国初の不平等条約。","textbook_keywords":["南京条約","香港割譲","不平等条約","公行廃止"],"title":"南京条約の締結","year":1842},{"difficulty":2,"id":"ev_1842_kyuuyo","is_premium":true,"link_reason":"大国・清がイギリスに敗れたというオランダ風説書の情報が、日本の対外政策を軟化させた直接の引き金。","linked_event_ids":["ev_1840_opium","ev_1825_uchiharai"],"region":"japan","summary_1line":"天保の改革を進める水野忠邦が、清の敗戦を知り外国船への強硬な打払令を緩和した。","textbook_keywords":["薪水給与令","水野忠邦","天保の改革"],"title":"薪水給与令への転換","year":1842},{"difficulty":2,"id":"ev_1848_comm_manifesto","is_premium":true,"link_reason":"欧州列強が国内の革命対応に追われていた1848〜50年代初頭の隙に、アメリカが東アジアへの積極進出を進めた。","linked_event_ids":["ev_1853_perry"],"region":"world","summary_1line":"フランス二月革命から欧州各地に自由主義・民族主義運動が波及し、マルクスらが『共産党宣言』を発表した。","textbook_keywords":["二月革命","諸国民の春","共産党宣言","マルクス"],"title":"1848年革命と『共産党宣言』","year":1848},{"difficulty":2,"id":"ev_1851_taiping","is_premium":true,"link_reason":"アヘン戦争後の社会混乱から起きた大乱で清が疲弊したことで、欧米列強の関心が中国だけでなく日本にも向かった。","linked_event_ids":["ev_1842_nanjing","ev_1868_meiji"],"region":"east_asia","summary_1line":"洪秀全がキリスト教系の新宗教を掲げて清朝打倒を叫び、南京を占領して10年以上続いた大反乱。","textbook_keywords":["太平天国の乱","洪秀全","滅満興漢"],"title":"太平天国の乱","year":1851},{"difficulty":1,"id":"ev_1853_perry","is_premium":true,"link_reason":"太平洋の捕鯨船の補給基地と、蒸気船による中国（清）貿易の中継地確保というアメリカの国益が開国要求の背景。","linked_event_ids":["ev_1776_us_ind","ev_1760_ind_rev","ev_1858_anpo"],"region":"japan","summary_1line":"アメリカ東インド艦隊司令長官ペリーが浦賀に来航し、大統領国書を届けて開国を迫った。","textbook_keywords":["ペリー来航","浦賀","日米和親条約","黒船"],"title":"ペリー来航（黒船来航）","year":1853},{"difficulty":1,"id":"ev_1858_anpo","is_premium":true,"link_reason":"清のアロー戦争（1856〜60年）の脅威を背景に締結され、この不平等条約の改正が明治政府最大の外交課題となった。","linked_event_ids":["ev_1842_nanjing","ev_1853_perry","ev_1871_iwakura"],"region":"japan","summary_1line":"ハリスとの間で結ばれた通商条約。領事裁判権の承認と関税自主権の喪失という不平等条約となった。","textbook_keywords":["日米修好通商条約","ハリス","井伊直弼","安政の五カ国条約"],"title":"日米修好通商条約の締結","year":1858},{"difficulty":2,"id":"ev_1861_us_civil","is_premium":true,"link_reason":"アメリカが内戦で日本への影響力を弱めた間隙にイギリス・フランスが幕末日本への関与を深め、終戦後は余剰武器が日本へ流れた。","linked_event_ids":["ev_1868_meiji"],"region":"world","summary_1line":"奴隷制と保護貿易をめぐり北部と南部が激突し、アメリカが4年間の内戦状態に入った。","textbook_keywords":["南北戦争","リンカン","奴隷解放宣言"],"title":"アメリカ南北戦争の勃発","year":1861},{"difficulty":1,"id":"ev_1868_meiji","is_premium":true,"link_reason":"西洋列強の植民地化圧力（帝国主義前夜）に対抗するため、中央集権的な近代国民国家への急速な転換が図られた。","linked_event_ids":["ev_1861_us_civil","ev_1869_suez","ev_1871_iwakura"],"region":"japan","summary_1line":"江戸幕府が倒れて明治新政府が発足し、富国強兵・殖産興業による急速な近代化がスタートした。","textbook_keywords":["明治維新","五箇条の御誓文","富国強兵","殖産興業"],"title":"明治維新（五箇条の御誓文）","year":1868},{"difficulty":2,"id":"ev_1869_suez","is_premium":true,"link_reason":"欧米と日本の距離が劇的に縮まり、明治初期のお雇い外国人の来日や岩倉使節団の渡航を加速させた。","linked_event_ids":["ev_1868_meiji","ev_1871_iwakura"],"region":"world","summary_1line":"地中海と紅海を結ぶ運河が開通し、ヨーロッパとアジア・日本を結ぶ航路が大幅に短縮された。","textbook_keywords":["スエズ運河","レセップス","アジア航路"],"title":"スエズ運河の開通","year":1869},{"difficulty":1,"id":"ev_1871_iwakura","is_premium":true,"link_reason":"条約改正の予備交渉は失敗したものの、プロイセン（ドイツ帝国成立直後）の統治モデルなどが明治憲法体制の参考になった。","linked_event_ids":["ev_1858_anpo","ev_1869_suez"],"region":"japan","summary_1line":"岩倉具視ら明治政府の首脳が約2年かけて欧米を視察し、近代法制や産業の必要性を痛感した。","textbook_keywords":["岩倉使節団","岩倉具視","大久保利通","条約改正"],"title":"岩倉使節団の派遣","year":1871},{"difficulty":1,"id":"ev_1894_nisshin","is_premium":true,"link_reason":"アジアの伝統的中心であった清が日本に敗れたことで、欧米列強による本格的な中国分割競争が加速した。","linked_event_ids":["ev_1868_meiji","ev_1895_shimonoseki"],"region":"east_asia","summary_1line":"朝鮮の甲午農民戦争を機に日本と清が衝突し、近代化を進めた日本が清に勝利した。","textbook_keywords":["日清戦争","甲午農民戦争","清国"],"title":"日清戦争の勃発","year":1894},{"difficulty":1,"id":"ev_1895_shimonoseki","is_premium":true,"link_reason":"帝国主義時代の露独仏の介入を目の当たりにした日本は「臥薪嘗胆」を合言葉に軍拡を進め、日露戦争へと向かう。","linked_event_ids":["ev_1894_nisshin"],"region":"east_asia","summary_1line":"日清戦争の講和で日本が遼東半島・台湾を獲得したが、ロシア・ドイツ・フランスの干渉で遼東半島を返還した。","textbook_keywords":["下関条約","三国干渉","台湾割譲","遼東半島"],"title":"下関条約と三国干渉","year":1895}];
+
+const YEAR_MIN = 1500, YEAR_MAX = 1900;
+const REGIONS = {
+  japan:    { label: "日本",     cls: "jp" },
+  east_asia:{ label: "東アジア", cls: "ea" },
+  world:    { label: "世界",     cls: "wd" }
+};
+const ZOOMS = {
+  overview: { ppy: 3.4, cardGap: 6, minorTick: 0  },
+  detail:   { ppy: 10,  cardGap: 8, minorTick: 10 }
+};
+let zoom = "overview";
+let selectedId = null;
+const byId = new Map(EVENTS.map(e => [e.id, e]));
+const sorted = [...EVENTS].sort((a, b) => a.year - b.year || a.id.localeCompare(b.id));
+
+/* === LOGIC START === */
+/* ゲーム判定とFSRS復習スケジューリングの純粋ロジック（DOM・保存に依存しない）。
+   Nodeテスト（tests/logic.test.mjs）がこの区切りを抽出して検証する。 */
+const ChronoLogic = (() => {
+  const DAY_MS = 86400000;
+  const WIDTHS = { easy: 50, normal: 30, hard: 20 };
+
+  /* 因果リンクは双方向に扱う（A→B のリンクがあれば B から見ても「つながり」） */
+  function linkedEither(a, b) {
+    return a.linked_event_ids.includes(b.id) || b.linked_event_ids.includes(a.id);
+  }
+  function linkReasonFor(base, cand) {
+    if (base.linked_event_ids.includes(cand.id)) return base.link_reason;
+    if (cand.linked_event_ids.includes(base.id)) return cand.link_reason;
+    return "";
+  }
+  function isCorrectAnswer(base, cand, width) {
+    return linkedEither(base, cand) || Math.abs(cand.year - base.year) <= width;
+  }
+  function shuffle(arr, rng) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  /* 手札生成：他地域から、正解を最低1枚必ず含めて5枚。
+     他地域に正解が無い基準（例：1895年・上級）では同地域の正解で代替する。
+     不正解は「年代が遠く、リンクもない」ものから選び、他地域を優先する。 */
+  function generateHand(base, events, width, rng) {
+    rng = rng || Math.random;
+    const others = events.filter(e => e.id !== base.id);
+    const otherRegion = others.filter(e => e.region !== base.region);
+    const correctOR = otherRegion.filter(e => isCorrectAnswer(base, e, width));
+    const correctPool = correctOR.length
+      ? correctOR
+      : others.filter(e => e.region === base.region && isCorrectAnswer(base, e, width));
+    const maxC = Math.min(3, correctPool.length);
+    const nC = maxC ? 1 + Math.floor(rng() * maxC) : 0;
+    const chosen = shuffle(correctPool, rng).slice(0, nC);
+    const wrong = others.filter(e => !isCorrectAnswer(base, e, width) && !chosen.includes(e));
+    const wrongSorted = shuffle(wrong.filter(e => e.region !== base.region), rng)
+      .concat(shuffle(wrong.filter(e => e.region === base.region), rng));
+    const hand = [...chosen];
+    for (const w of wrongSorted) {
+      if (hand.length >= 5) break;
+      hand.push(w);
+    }
+    return shuffle(hand, rng);
+  }
+  function judgeRound(base, hand, selectedIds, width) {
+    const sel = new Set(selectedIds);
+    const results = hand.map(cand => {
+      const correct = isCorrectAnswer(base, cand, width);
+      const picked = sel.has(cand.id);
+      return { id: cand.id, correct, picked, judgedRight: correct === picked };
+    });
+    const missedIds = results.filter(r => !r.judgedRight).map(r => r.id);
+    return { results, missedIds, perfect: missedIds.length === 0 };
+  }
+  function updateCombo(combo, perfect) { return perfect ? combo + 1 : 0; }
+  /* 1ラウンドの得点：正しく判定した手札1枚=10点。全問正解ならコンボ倍率（最大5倍） */
+  function roundScore(judgedRightCount, perfect, comboAfter) {
+    const pts = judgedRightCount * 10;
+    if (!perfect) return pts;
+    return pts * Math.min(Math.max(comboAfter, 1), 5);
+  }
+
+  /* --- 簡易FSRS（間隔反復） ---
+     作成（ミス登録）→翌日、正解→3日後→7日後→以降は前回間隔の倍。
+     不正解→翌日に戻り、連続正解数はリセット。 */
+  function createReviewItem(id, now) {
+    return { id, stability: 1, due: now + DAY_MS, reps: 0, lapses: 0 };
+  }
+  function reviewSuccess(item, now) {
+    const reps = item.reps + 1;
+    const interval = reps === 1 ? 3 : reps === 2 ? 7 : item.stability * 2;
+    return { ...item, stability: interval, due: now + interval * DAY_MS, reps };
+  }
+  function reviewFailure(item, now) {
+    return { ...item, stability: 1, due: now + DAY_MS, reps: 0, lapses: item.lapses + 1 };
+  }
+  function registerMiss(items, id, now) {
+    const next = { ...items };
+    next[id] = next[id] ? reviewFailure(next[id], now) : createReviewItem(id, now);
+    return next;
+  }
+  function isDue(item, now) { return item.due <= now; }
+  function dueItems(items, now) {
+    return Object.values(items).filter(it => isDue(it, now)).sort((a, b) => a.due - b.due);
+  }
+  return {
+    DAY_MS, WIDTHS, linkedEither, linkReasonFor, isCorrectAnswer,
+    generateHand, judgeRound, updateCombo, roundScore,
+    createReviewItem, reviewSuccess, reviewFailure, registerMiss, isDue, dueItems
+  };
+})();
+/* === LOGIC END === */
+
+const $ = id => document.getElementById(id);
+const tlScroll = $("tlScroll"), tlBody = $("tlBody");
+
+document.querySelectorAll(".js-ver").forEach(el => el.textContent = APP_VERSION);
+
+/* ---------- タイムライン描画 ---------- */
+function render() {
+  const { ppy, cardGap, minorTick } = ZOOMS[zoom];
+  const baseHeight = (YEAR_MAX - YEAR_MIN) * ppy;
+
+  // 目盛り（グリッド線＋年のラベル）
+  const gl = $("gridlines"), axis = $("axis");
+  gl.innerHTML = ""; axis.innerHTML = "";
+  for (let y = YEAR_MIN; y <= YEAR_MAX; y += 10) {
+    const top = (y - YEAR_MIN) * ppy;
+    const major = (y % 50 === 0);
+    if (major || minorTick) {
+      const line = document.createElement("div");
+      line.className = "gl " + (major ? "major" : "minor");
+      line.style.top = top + "px";
+      gl.appendChild(line);
+    }
+    if (major) {
+      const t = document.createElement("div");
+      t.className = "tick major";
+      t.style.top = top + "px";
+      t.textContent = y;
+      axis.appendChild(t);
+    }
+  }
+
+  // レーンごとにカード配置（前のカードの実際の高さ＋隙間で積み上げ、重なりを防ぐ）
+  let maxBottom = baseHeight;
+  for (const region of Object.keys(REGIONS)) {
+    const lane = $("lane-" + region);
+    lane.innerHTML = "";
+    let lastBottom = -Infinity;
+    for (const ev of sorted.filter(e => e.region === region)) {
+      const trueTop = (ev.year - YEAR_MIN) * ppy;
+      const top = Math.max(trueTop, lastBottom + cardGap);
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "card " + REGIONS[region].cls;
+      card.dataset.id = ev.id;
+      card.style.top = top + "px";
+      const hasLink = ev.linked_event_ids.length > 0;
+      card.setAttribute("aria-label",
+        ev.year + "年 " + ev.title + "（難易度" + ev.difficulty + (hasLink ? "、つながりあり" : "") + "）");
+      const topRow = document.createElement("span");
+      topRow.className = "card-top";
+      const cy = document.createElement("span");
+      cy.className = "cy"; cy.textContent = ev.year + "年";
+      topRow.appendChild(cy);
+      const meta = document.createElement("span");
+      meta.className = "card-meta";
+      if (hasLink) {
+        const lm = document.createElement("span");
+        lm.className = "link-mark";
+        lm.setAttribute("aria-hidden", "true");
+        lm.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+        meta.appendChild(lm);
+      }
+      const dots = document.createElement("span");
+      dots.className = "dots";
+      dots.setAttribute("aria-hidden", "true");
+      for (let d = 1; d <= 3; d++) {
+        const dot = document.createElement("i");
+        if (d <= ev.difficulty) dot.className = "on";
+        dots.appendChild(dot);
+      }
+      meta.appendChild(dots);
+      topRow.appendChild(meta);
+      const ct = document.createElement("span");
+      ct.className = "ct"; ct.textContent = ev.title;
+      card.appendChild(topRow); card.appendChild(ct);
+      lane.appendChild(card);
+      // 非表示中（offsetHeight=0）は概算74pxで代用し、表示後に再描画して実測に合わせる
+      const h = card.offsetHeight || 74;
+      lastBottom = top + h;
+      maxBottom = Math.max(maxBottom, lastBottom);
+    }
+  }
+  tlBody.style.height = (maxBottom + 30) + "px";
+  applySelectionClasses();
+}
+
+/* ---------- 選択とハイライト ---------- */
+function applySelectionClasses() {
+  const linked = new Set();
+  if (selectedId && byId.has(selectedId)) {
+    byId.get(selectedId).linked_event_ids.forEach(id => linked.add(id));
+  }
+  document.querySelectorAll(".card").forEach(c => {
+    c.classList.toggle("selected", c.dataset.id === selectedId);
+    c.classList.toggle("linked", linked.has(c.dataset.id));
+  });
+}
+
+function scrollToCard(id) {
+  const card = document.querySelector('.card[data-id="' + id + '"]');
+  if (!card) return;
+  const r = card.getBoundingClientRect(), c = tlScroll.getBoundingClientRect();
+  tlScroll.scrollTo({ top: tlScroll.scrollTop + (r.top - c.top) - 110, behavior: "smooth" });
+}
+
+function select(id, opts) {
+  opts = opts || {};
+  if (!byId.has(id)) return;
+  selectedId = id;
+  applySelectionClasses();
+  renderPanel(byId.get(id));
+  $("panel").classList.add("open");
+  $("panel").setAttribute("aria-hidden", "false");
+  if (opts.scroll) scrollToCard(id);
+}
+
+function closePanel() {
+  selectedId = null;
+  applySelectionClasses();
+  $("panel").classList.remove("open");
+  $("panel").setAttribute("aria-hidden", "true");
+}
+
+/* ---------- 詳細パネル ---------- */
+function renderPanel(ev) {
+  const reg = REGIONS[ev.region];
+  const badge = $("panelBadge");
+  badge.textContent = reg.label;
+  badge.className = "badge " + reg.cls;
+  $("panelYear").textContent = ev.year + "年";
+  $("panelTitle").textContent = ev.title;
+
+  const body = $("panelBody");
+  body.innerHTML = "";
+
+  const sum = document.createElement("p");
+  sum.className = "panel-summary";
+  sum.textContent = ev.summary_1line;
+  body.appendChild(sum);
+
+  const diff = document.createElement("p");
+  diff.className = "diff";
+  diff.textContent = "難易度 " + "●".repeat(ev.difficulty) + "○".repeat(3 - ev.difficulty);
+  body.appendChild(diff);
+
+  const h1 = document.createElement("div");
+  h1.className = "panel-sec"; h1.textContent = "教科書キーワード";
+  body.appendChild(h1);
+  const chips = document.createElement("div");
+  chips.className = "chips";
+  ev.textbook_keywords.forEach(kw => {
+    const s = document.createElement("span");
+    s.className = "chip"; s.textContent = kw;
+    chips.appendChild(s);
+  });
+  body.appendChild(chips);
+
+  const links = ev.linked_event_ids.map(id => byId.get(id)).filter(Boolean);
+  if (links.length) {
+    const h2 = document.createElement("div");
+    h2.className = "panel-sec"; h2.textContent = "なぜつながっている？";
+    body.appendChild(h2);
+    const reason = document.createElement("p");
+    reason.className = "reason";
+    reason.textContent = ev.link_reason;
+    body.appendChild(reason);
+
+    const h3 = document.createElement("div");
+    h3.className = "panel-sec"; h3.textContent = "つながる出来事（タップで移動）";
+    body.appendChild(h3);
+    const list = document.createElement("div");
+    list.className = "link-list";
+    links.forEach(le => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "link-btn " + REGIONS[le.region].cls;
+      b.dataset.linkId = le.id;
+      const bar = document.createElement("span"); bar.className = "bar";
+      const ly = document.createElement("span"); ly.className = "ly"; ly.textContent = le.year + "年";
+      const lt = document.createElement("span"); lt.className = "lt"; lt.textContent = le.title + "（" + REGIONS[le.region].label + "）";
+      const go = document.createElement("span"); go.className = "go"; go.textContent = "→";
+      b.appendChild(bar); b.appendChild(ly); b.appendChild(lt); b.appendChild(go);
+      list.appendChild(b);
+    });
+    body.appendChild(list);
+  }
+  body.scrollTop = 0;
+}
+
+/* ---------- イベント配線 ---------- */
+tlBody.addEventListener("click", e => {
+  const card = e.target.closest(".card");
+  if (card) select(card.dataset.id, { scroll: false });
+});
+$("panelBody").addEventListener("click", e => {
+  const b = e.target.closest("[data-link-id]");
+  if (b) select(b.dataset.linkId, { scroll: true });
+});
+$("panelClose").addEventListener("click", closePanel);
+
+function setZoom(z) {
+  if (z === zoom) return;
+  const ratio = tlScroll.scrollTop / Math.max(1, tlScroll.scrollHeight - tlScroll.clientHeight);
+  zoom = z;
+  $("zoom-overview").setAttribute("aria-pressed", String(z === "overview"));
+  $("zoom-detail").setAttribute("aria-pressed", String(z === "detail"));
+  render();
+  requestAnimationFrame(() => {
+    tlScroll.scrollTop = ratio * Math.max(0, tlScroll.scrollHeight - tlScroll.clientHeight);
+  });
+}
+$("zoom-overview").addEventListener("click", () => setZoom("overview"));
+$("zoom-detail").addEventListener("click", () => setZoom("detail"));
+
+/* ---------- 使い方ガイド ---------- */
+const GUIDE_KEY = "chronosync.guideSeen.v1";
+function guideSeen() {
+  try { return localStorage.getItem(GUIDE_KEY) === "1"; } catch { return true; }
+}
+function showGuide() { $("guide").classList.remove("hidden"); }
+function hideGuide() {
+  $("guide").classList.add("hidden");
+  try { localStorage.setItem(GUIDE_KEY, "1"); } catch {}
+}
+$("btn-guide-close").addEventListener("click", hideGuide);
+$("btn-guide").addEventListener("click", showGuide);
+
+$("btn-open").addEventListener("click", () => {
+  $("screen-title").classList.add("hidden");
+  $("screen-main").classList.remove("hidden");
+  render(); // 表示状態でカード高さを実測し、重ならない配置にし直す
+  if (!guideSeen()) showGuide();
+});
+$("btn-back").addEventListener("click", () => {
+  closePanel();
+  $("screen-main").classList.add("hidden");
+  $("screen-title").classList.remove("hidden");
+  updateReviewBadges();
+});
+$("btn-update").addEventListener("click", () => {
+  const url = new URL(location.href);
+  url.searchParams.set("v", Date.now().toString());
+  location.replace(url.toString());
+});
+
+/* ================================================================
+   フェーズ2：同時代コンボゲーム ＋ 弱点復習モード
+   ================================================================ */
+const REVIEW_KEY = "chronosync.review.v1";
+const MUTE_KEY = "chronosync.muted.v1";
+const LEVEL_KEY = "chronosync.level.v1";
+const L = ChronoLogic;
+
+function loadReviewItems() {
+  try { return JSON.parse(localStorage.getItem(REVIEW_KEY)) || {}; } catch { return {}; }
+}
+function saveReviewItems(items) {
+  try { localStorage.setItem(REVIEW_KEY, JSON.stringify(items)); } catch {}
+}
+function dueCount() { return L.dueItems(loadReviewItems(), Date.now()).length; }
+function updateReviewBadges() {
+  const n = dueCount();
+  $("btn-to-review").textContent = "弱点復習（今日 " + n + " 件）";
+  $("btn-main-review").textContent = "復習（" + n + "）";
+}
+
+/* ---------- 効果音（WebAudio・1.3kHz帯中心） ---------- */
+let audioCtx = null;
+let muted = (() => { try { return localStorage.getItem(MUTE_KEY) === "1"; } catch { return false; } })();
+function ensureAudio() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { audioCtx = null; }
+  }
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+}
+function tone(freq, delay, dur) {
+  if (!audioCtx || muted) return;
+  const t0 = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0 + dur + 0.05);
+}
+function playCorrect() { tone(1046.5, 0, 0.14); tone(1318.5, 0.09, 0.22); }
+function playCombo() { [1046.5, 1318.5, 1568.0, 2093.0].forEach((f, i) => tone(f, i * 0.08, 0.2)); }
+function playWrong() { tone(659.3, 0, 0.28); }
+function syncMuteBtn() {
+  $("btn-mute").textContent = muted ? "音：オフ" : "音：オン";
+  $("btn-mute").setAttribute("aria-pressed", String(muted));
+}
+$("btn-mute").addEventListener("click", () => {
+  muted = !muted;
+  try { localStorage.setItem(MUTE_KEY, muted ? "1" : "0"); } catch {}
+  syncMuteBtn();
+  if (!muted) { ensureAudio(); playCorrect(); }
+});
+
+/* ---------- 画面遷移 ---------- */
+function showScreen(name) {
+  $("screen-title").classList.toggle("hidden", name !== "title");
+  $("screen-main").classList.toggle("hidden", name !== "main");
+  $("screen-game").classList.toggle("hidden", name !== "game");
+  if (name === "main") render();
+  if (name === "game") updateGameStart();
+  updateReviewBadges();
+}
+
+/* ---------- ゲームの状態 ---------- */
+const game = {
+  mode: "game",
+  level: (() => { try { return localStorage.getItem(LEVEL_KEY) || "normal"; } catch { return "normal"; } })(),
+  queue: [], idx: 0, score: 0, combo: 0, maxCombo: 0, perfectRounds: 0,
+  base: null, hand: [], selected: new Set(), judged: false
+};
+if (!L.WIDTHS[game.level]) game.level = "normal";
+
+function syncLevelBtns() {
+  document.querySelectorAll(".level-switch button").forEach(b => {
+    b.setAttribute("aria-pressed", String(b.dataset.level === game.level));
+  });
+}
+document.querySelectorAll(".level-switch button").forEach(b => {
+  b.addEventListener("click", () => {
+    game.level = b.dataset.level;
+    try { localStorage.setItem(LEVEL_KEY, game.level); } catch {}
+    syncLevelBtns();
+  });
+});
+
+function openGame(mode) {
+  game.mode = mode;
+  closePanel();
+  showScreen("game");
+}
+
+function updateGameStart() {
+  const isReview = game.mode === "review";
+  const n = dueCount();
+  $("game-title").textContent = isReview ? "弱点復習" : "コンボゲーム";
+  $("game-start-title").textContent = isReview ? "弱点復習モード" : "同時代コンボゲーム";
+  $("game-start-desc").textContent = isReview
+    ? "前にミスした問題が、忘れかけたころに出題されます。基準の出来事と「同時代」または「つながり」のある出来事を、すべて選んでください。"
+    : "基準の出来事と「同時代」または「つながり」のある出来事を、すべて選んでください。因果リンクのある出来事は、年代が離れていても正解です。手札の年代は判定後に分かります。";
+  $("review-info").textContent = isReview
+    ? (n > 0 ? "今日の復習は " + n + " 件です。" : "今日の復習はありません。コンボゲームでミスした問題が、翌日以降ここに出題されます。")
+    : "";
+  $("btn-game-start").disabled = isReview && n === 0;
+  $("btn-game-start").textContent = isReview ? "復習スタート" : "ゲームスタート";
+  $("game-start-note").textContent = isReview
+    ? "正解すると次の復習は少し先に、ミスすると明日また出題されます。"
+    : "1セット10問。ミスした問題は「弱点復習」に自動で登録され、翌日以降に出題されます。";
+  $("game-start").classList.remove("hidden");
+  $("game-play").classList.add("hidden");
+  $("game-result").classList.add("hidden");
+  syncLevelBtns();
+  syncMuteBtn();
+}
+
+function startSession() {
+  ensureAudio();
+  if (game.mode === "review") {
+    game.queue = L.dueItems(loadReviewItems(), Date.now()).map(it => it.id);
+    if (!game.queue.length) { updateGameStart(); return; }
+  } else {
+    game.queue = [...EVENTS].sort(() => Math.random() - 0.5).slice(0, 10).map(e => e.id);
+  }
+  game.idx = 0; game.score = 0; game.combo = 0; game.maxCombo = 0; game.perfectRounds = 0;
+  $("game-start").classList.add("hidden");
+  $("game-result").classList.add("hidden");
+  $("game-play").classList.remove("hidden");
+  nextQuestion();
+}
+
+function nextQuestion() {
+  game.base = byId.get(game.queue[game.idx]);
+  game.hand = L.generateHand(game.base, EVENTS, L.WIDTHS[game.level]);
+  game.selected = new Set();
+  game.judged = false;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const ev = game.base, reg = REGIONS[ev.region];
+  $("gs-progress").textContent = "第" + (game.idx + 1) + "問 / " + game.queue.length;
+  $("gs-score").textContent = "スコア " + game.score;
+  const comboEl = $("gs-combo");
+  comboEl.textContent = "コンボ " + game.combo;
+  comboEl.classList.toggle("combo-hot", game.combo >= 2);
+
+  const bc = $("base-card");
+  bc.innerHTML = "";
+  const badge = document.createElement("span");
+  badge.className = "badge " + reg.cls;
+  badge.textContent = reg.label;
+  const by = document.createElement("span");
+  by.className = "byear";
+  by.textContent = ev.year + "年";
+  const bt = document.createElement("div");
+  bt.className = "bt";
+  bt.textContent = ev.title;
+  bc.appendChild(badge); bc.appendChild(by); bc.appendChild(bt);
+
+  const list = $("hand-list");
+  list.innerHTML = "";
+  game.hand.forEach(cand => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "hand-card " + REGIONS[cand.region].cls;
+    b.dataset.handId = cand.id;
+    const bar = document.createElement("span"); bar.className = "bar";
+    const main = document.createElement("span"); main.className = "hand-main";
+    const ht = document.createElement("span"); ht.className = "ht"; ht.textContent = cand.title;
+    const hr = document.createElement("span"); hr.className = "hr";
+    hr.textContent = REGIONS[cand.region].label + "　";
+    const hy = document.createElement("span"); hy.className = "hy hidden"; hy.textContent = cand.year + "年";
+    hr.appendChild(hy);
+    const reason = document.createElement("span"); reason.className = "reason-line hidden";
+    main.appendChild(ht); main.appendChild(hr); main.appendChild(reason);
+    const mark = document.createElement("span"); mark.className = "mark hidden";
+    b.appendChild(bar); b.appendChild(main); b.appendChild(mark);
+    list.appendChild(b);
+  });
+  $("round-banner").classList.add("hidden");
+  $("btn-decide").classList.remove("hidden");
+  $("btn-next-q").classList.add("hidden");
+  document.querySelector(".game-scroll").scrollTop = 0;
+}
+
+$("hand-list").addEventListener("click", e => {
+  const card = e.target.closest(".hand-card");
+  if (!card || game.judged) return;
+  ensureAudio();
+  const id = card.dataset.handId;
+  if (game.selected.has(id)) { game.selected.delete(id); card.classList.remove("picked"); }
+  else { game.selected.add(id); card.classList.add("picked"); }
+});
+
+$("btn-decide").addEventListener("click", () => {
+  if (game.judged) return;
+  ensureAudio();
+  game.judged = true;
+  const width = L.WIDTHS[game.level];
+  const { results, missedIds, perfect } =
+    L.judgeRound(game.base, game.hand, [...game.selected], width);
+  game.combo = L.updateCombo(game.combo, perfect);
+  if (perfect) game.perfectRounds++;
+  game.maxCombo = Math.max(game.maxCombo, game.combo);
+  const judgedRight = results.filter(r => r.judgedRight).length;
+  const pts = L.roundScore(judgedRight, perfect, game.combo);
+  game.score += pts;
+
+  /* 復習スケジュールへの反映 */
+  const now = Date.now();
+  let items = loadReviewItems();
+  if (game.mode === "review") {
+    const cur = items[game.base.id] || L.createReviewItem(game.base.id, now);
+    items = { ...items };
+    items[game.base.id] = perfect ? L.reviewSuccess(cur, now) : L.reviewFailure(cur, now);
+    missedIds.forEach(id => { items = L.registerMiss(items, id, now); });
+  } else if (!perfect) {
+    items = L.registerMiss(items, game.base.id, now);
+    missedIds.forEach(id => { items = L.registerMiss(items, id, now); });
+  }
+  saveReviewItems(items);
+  updateReviewBadges();
+
+  /* フィードバック表示 */
+  const byRes = new Map(results.map(r => [r.id, r]));
+  document.querySelectorAll(".hand-card").forEach(card => {
+    const cand = byId.get(card.dataset.handId);
+    const r = byRes.get(cand.id);
+    card.classList.remove("picked");
+    card.querySelector(".hy").classList.remove("hidden");
+    const mark = card.querySelector(".mark");
+    mark.classList.remove("hidden");
+    const reason = card.querySelector(".reason-line");
+    reason.classList.remove("hidden");
+    const diff = Math.abs(cand.year - game.base.year);
+    if (r.correct && r.picked) { card.classList.add("ok"); mark.className = "mark ok"; mark.textContent = "正解"; }
+    else if (r.correct && !r.picked) { card.classList.add("missed"); mark.className = "mark missed"; mark.textContent = "正解だった"; }
+    else if (!r.correct && r.picked) { card.classList.add("ng"); mark.className = "mark ng"; mark.textContent = "ハズレ"; }
+    else { card.classList.add("ok"); mark.className = "mark ok"; mark.textContent = "正解"; }
+    if (L.linkedEither(game.base, cand)) {
+      reason.textContent = "つながり：" + L.linkReasonFor(game.base, cand);
+    } else if (r.correct) {
+      reason.textContent = cand.year + "年（基準と " + diff + " 年ちがい・同時代）";
+    } else {
+      reason.textContent = cand.year + "年（基準と " + diff + " 年ちがい）";
+    }
+  });
+
+  const banner = $("round-banner");
+  banner.classList.remove("hidden");
+  banner.textContent = perfect
+    ? (game.combo >= 2
+        ? "全問正解！ " + game.combo + " コンボ（得点 " + pts + " 点）"
+        : "全問正解！（得点 " + pts + " 点）")
+    : judgedRight + " / " + results.length + " 枚 正しく判定（得点 " + pts + " 点）";
+  $("gs-score").textContent = "スコア " + game.score;
+  const comboEl = $("gs-combo");
+  comboEl.textContent = "コンボ " + game.combo;
+  comboEl.classList.toggle("combo-hot", game.combo >= 2);
+
+  if (perfect) { if (game.combo >= 2) playCombo(); else playCorrect(); }
+  else playWrong();
+
+  $("btn-decide").classList.add("hidden");
+  const nextBtn = $("btn-next-q");
+  nextBtn.textContent = game.idx + 1 >= game.queue.length ? "結果を見る" : "次の問題へ";
+  nextBtn.classList.remove("hidden");
+});
+
+$("btn-next-q").addEventListener("click", () => {
+  game.idx++;
+  if (game.idx >= game.queue.length) showResult();
+  else nextQuestion();
+});
+
+function showResult() {
+  $("game-play").classList.add("hidden");
+  $("game-result").classList.remove("hidden");
+  $("rs-score").textContent = game.score;
+  $("rs-perfect").textContent = game.perfectRounds + "/" + game.queue.length;
+  $("rs-combo").textContent = game.maxCombo;
+  const again = $("btn-again");
+  if (game.mode === "review") {
+    const rest = dueCount();
+    $("rs-note").textContent = rest > 0
+      ? "今日の復習はあと " + rest + " 件あります。"
+      : "今日の復習はすべて終わりました。おつかれさまでした。";
+    again.textContent = "復習をつづける";
+    again.classList.toggle("hidden", rest === 0);
+  } else {
+    $("rs-note").textContent = game.perfectRounds === game.queue.length
+      ? "全セット全問正解！ すばらしいです。"
+      : "ミスした問題は「弱点復習」に登録されました。明日以降、復習モードで出題されます。";
+    again.textContent = "もう一度あそぶ";
+    again.classList.remove("hidden");
+  }
+  document.querySelector(".game-scroll").scrollTop = 0;
+}
+
+$("btn-game-start").addEventListener("click", startSession);
+$("btn-again").addEventListener("click", startSession);
+$("btn-to-game").addEventListener("click", () => openGame("game"));
+$("btn-to-review").addEventListener("click", () => openGame("review"));
+$("btn-main-game").addEventListener("click", () => openGame("game"));
+$("btn-main-review").addEventListener("click", () => openGame("review"));
+$("btn-game-quit").addEventListener("click", () => showScreen("title"));
+$("btn-to-timeline").addEventListener("click", () => showScreen("main"));
+$("btn-to-title").addEventListener("click", () => showScreen("title"));
+
+window.addEventListener("resize", () => {
+  if (!$("screen-main").classList.contains("hidden")) render();
+});
+
+syncMuteBtn();
+updateReviewBadges();
+render();
+</script>
+</body>
+</html>
